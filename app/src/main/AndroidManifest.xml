@@ -3,6 +3,7 @@
     package="de.hka.esfl1011.oeha1016.simplenotesapp">
 
     <application
+        android:name=".SimpleNotesApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

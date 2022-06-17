@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DetailNoteScreen(notesViewModel: SimpleNotesAppViewModel) {
+fun DetailNoteScreen(id: Long, onClick: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.padding(top = 16.dp))
         Text(text = "Hello from DetailNoteScreen")
