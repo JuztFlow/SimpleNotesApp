@@ -1,7 +1,6 @@
 package de.hka.esfl1011.oeha1016.simplenotesapp
 
 import android.os.Bundle
-
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme

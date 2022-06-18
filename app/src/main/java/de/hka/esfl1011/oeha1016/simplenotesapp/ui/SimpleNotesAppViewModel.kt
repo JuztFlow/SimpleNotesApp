@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,35 +24,41 @@ class SimpleNotesAppViewModel @Inject constructor(
         loadNotes()
     }
 
+    private fun reloadNotes() {
+        loadNotes()
+    }
+
     private fun loadNotes() {
-        _notesUIData.update { prev -> prev.copy(isLoading = true) }
         viewModelScope.launch {
+            _notesUIData.update { prev -> prev.copy(isLoading = true) }
             val notes = notesRepository.getNotes()
             _notesUIData.update { prev -> prev.copy(isLoading = false, notes = notes) }
         }
     }
 
-    fun getNote(id: Long) {
-        viewModelScope.launch {
-            notesRepository.getNote(id)
-        }
+    fun updateCurrentNote(currentNote: Note) {
+        _notesUIData.update { prev -> prev.copy(currentNote = currentNote) }
     }
 
-    fun addNote(note: Note) {
-        _notesUIData.update { prev -> prev.copy(isLoading = true) }
+    fun addNote(title: String, description: String) {
         viewModelScope.launch {
-            notesRepository.addNote(note)
-            _notesUIData.update { prev -> prev.copy(isLoading = false, notes = listOf(note) + prev.notes ) }
+            _notesUIData.update { prev -> prev.copy(isLoading = true) }
+            notesRepository.addNote(Note(0, OffsetDateTime.now(), title, description))
+            reloadNotes()
         }
     }
 
     fun removeNote(note: Note) {
         viewModelScope.launch {
+            _notesUIData.update { prev -> prev.copy(isLoading = true) }
             notesRepository.removeNote(note)
+            _notesUIData.update { prev -> prev.copy(isLoading = false, notes = prev.notes.filter { it.id != note.id }) }
         }
     }
 
     companion object {
-        private val DEFAULT_NOTE_UI_STATE = NotesUIData(emptyList(), false)
+        private val DEFAULT_NOTE_UI_STATE = NotesUIData(
+            emptyList(), Note(0, OffsetDateTime.MIN, "", ""), false
+        )
     }
 }

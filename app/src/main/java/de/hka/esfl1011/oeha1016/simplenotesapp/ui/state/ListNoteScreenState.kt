@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 class ListNoteScreenState {
     var titleState: String by mutableStateOf("")
     var descriptionState: String by mutableStateOf("")
+    var showDialogState: Boolean by mutableStateOf(false)
 }
 
 @Composable

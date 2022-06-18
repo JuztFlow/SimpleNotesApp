@@ -2,11 +2,8 @@ package de.hka.esfl1011.oeha1016.simplenotesapp.data
 
 import de.hka.esfl1011.oeha1016.simplenotesapp.data.db.Note
 import de.hka.esfl1011.oeha1016.simplenotesapp.data.db.NoteDao
-import de.hka.esfl1011.oeha1016.simplenotesapp.ui.NotesUIData
-import de.hka.esfl1011.oeha1016.simplenotesapp.ui.SimpleNotesAppViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,16 +11,15 @@ import javax.inject.Singleton
 class NotesRepository @Inject constructor(
     private val noteDao: NoteDao
 ) {
-    suspend fun getNotes(): List<Note> = noteDao.getAll()
+    suspend fun getNotes(): List<Note> = withContext(Dispatchers.IO) {
+        return@withContext noteDao.getAll()
+    }
 
-    suspend fun getNote(id: Long) = noteDao.getNote(id)
-
-    suspend fun addNote(note: Note) {
+    suspend fun addNote(note: Note) = withContext(Dispatchers.IO) {
         noteDao.insert(note)
     }
 
-    suspend fun removeNote(note: Note) {
+    suspend fun removeNote(note: Note) = withContext(Dispatchers.IO) {
         noteDao.delete(note)
     }
-
 }
